@@ -1,7 +1,7 @@
 [project]
 name = "configparser_rb"
 version = "0.1.0"
-description = "Config parser with the ability to obfuscate keys with rotated bits "
+description = "Config parser with the ability to obfuscate keys with rotated bits in base64"
 authors = [{name = "turulomio", email = "turulomio@yahoo.es"}]
 license = "GPL-3.0"
 readme = "README.md"
@@ -15,6 +15,11 @@ packages = [{include = "configparser_rb"}]
 pytest = ">=8.3.3"
 poethepoet = ">=0.29.0.1"
 coverage = ">=7.6.4"
+
+
+[tool.poetry.scripts]
+configparser_rb_get='configparser_rb.core:get'
+configparser_rb_set='configparser_rb.core:set'
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]

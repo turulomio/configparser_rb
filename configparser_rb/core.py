@@ -77,7 +77,7 @@ def string2dtnaive(s, format):
         raise (_("I can't convert this format '{}'. I only support this {}").format(format, allowed))
 
 
-class MyConfigParser:
+class ConfigParserRB:
     def __init__(self, filename):
         self.filename=filename
         self.config=ConfigParser()
@@ -170,7 +170,7 @@ def set():
     from argparse import ArgumentParser
 
     parser=ArgumentParser()
-    parser.description="Configura las keys en ficheros de MyConfigParser"
+    parser.description="Configura las keys en ficheros de ConfigParserRB"
     parser.add_argument("--file", required=True)
     parser.add_argument("--section", required=True)
     parser.add_argument("--key", required=True)
@@ -178,7 +178,7 @@ def set():
     parser.add_argument("--secure", help="Encode setting", action="store_true", default=False)
     args=parser.parse_args()
 
-    config=MyConfigParser(args.file)
+    config=ConfigParserRB(args.file)
     if args.secure:
         config.cset(args.section, args.key, args.value)
     else:
@@ -189,14 +189,14 @@ def get():
     from argparse import ArgumentParser
 
     parser=ArgumentParser()
-    parser.description="Configura las keys en ficheros de MyConfigParser"
+    parser.description="Configura las keys en ficheros de ConfigParserRB"
     parser.add_argument("--file", required=True)
     parser.add_argument("--section", required=True)
     parser.add_argument("--key", required=True)
     parser.add_argument("--secure", help="Encode setting", action="store_true", default=False)
     args=parser.parse_args()
 
-    config=MyConfigParser(args.file)
+    config=ConfigParserRB(args.file)
     if args.secure:
         config.cget(args.section, args.key)
     else:
