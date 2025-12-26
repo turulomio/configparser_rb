@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "configparser_rb"
+version = "0.1.0"
+description = "Module to use dictionaries in various situations"
+authors = ["turulomio <turulomio@yahoo.es>"]
+license = "GPL-3.0"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.9,<4"
+
+[tool.poetry.group.dev.dependencies]
+pytest = ">=8.3.3"
+poethepoet = ">=0.29.0.1"
+coverage = ">=7.6.4"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poe.tasks]
+release = { script = "configparser_rb.poethepoet:release" }
+translate = { script = "configparser_rb.poethepoet:translate" }
+test   = "pytest" 
+coverage = { script = "configparser_rb.poethepoet:coverage" }
+
+[project.urls] 
+homepage = "https://github.com/turulomio/configparser_rb/"
+repository = "https://github.com/turulomio/configparser_rb/"
+changelog = "https://github.com/turulomio/configparser_rb#changelog"
