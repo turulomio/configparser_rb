@@ -1,13 +1,15 @@
-[tool.poetry]
+[project]
 name = "configparser_rb"
 version = "0.1.0"
-description = "Module to use dictionaries in various situations"
-authors = ["turulomio <turulomio@yahoo.es>"]
+description = "Config parser with the ability to obfuscate keys with rotated bits "
+authors = [{name = "turulomio", email = "turulomio@yahoo.es"}]
 license = "GPL-3.0"
 readme = "README.md"
+requires-python = ">=3.9,<4"
+dependencies = []
 
-[tool.poetry.dependencies]
-python = ">=3.9,<4"
+[tool.poetry]
+packages = [{include = "configparser_rb"}]
 
 [tool.poetry.group.dev.dependencies]
 pytest = ">=8.3.3"
@@ -15,7 +17,7 @@ poethepoet = ">=0.29.0.1"
 coverage = ">=7.6.4"
 
 [build-system]
-requires = ["poetry-core"]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poe.tasks]
