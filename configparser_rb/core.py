@@ -1,35 +1,10 @@
-from base64 import b64encode, b64decode
 from configparser import ConfigParser
-from datetime import date, datetime, timedelta
 from decimal import Decimal
 from logging import debug
 from os import path, makedirs
 from configparser_rb import _
 from configparser_rb.rotatedbase64 import string_to_rotatedbase64, rotatedbase64_to_string
-
-
-## BEGIN OF COPIES
-## To make independient modules I copy this from reusing/casts
-def str2bool(value):
-    if value=="0" or value.lower()=="false":
-        return False
-    elif value=="1" or value.lower()=="true":
-        return True
-
-def list2string(lista):
-        """Covierte lista a string"""
-        if  len(lista)==0:
-            return ""
-        if str(lista[0].__class__) in ["<class 'int'>", "<class 'float'>"]:
-            resultado=""
-            for l in lista:
-                resultado=resultado+ str(l) + ", "
-            return resultado[:-2]
-        elif str(lista[0].__class__) in ["<class 'str'>",]:
-            resultado=""
-            for l in lista:
-                resultado=resultado+ "'" + str(l) + "', "
-            return resultado[:-2]
+from pydicts import casts
 
 def string2list_of_strings(s, separator=", "):
     arr=[]
@@ -46,36 +21,21 @@ def string2list_of_integers(s, separator=", "):
         for a in arrs:
             arr.append(int(a))
     return arr
-## To make independient modules I copy this from reusing/datetime_functions
-def string2dtnaive(s, format):
-    allowed=["%Y%m%d%H%M","%Y-%m-%d %H:%M:%S","%d/%m/%Y %H:%M","%d %m %H:%M %Y","%Y-%m-%d %H:%M:%S.","%H:%M:%S", '%b %d %H:%M:%S']
-    if format in allowed:
-        if format=="%Y%m%d%H%M":
-            dat=datetime.strptime( s, format )
-            return dat
-        if format=="%Y-%m-%d %H:%M:%S":#2017-11-20 23:00:00
-            return datetime.strptime( s, format )
-        if format=="%d/%m/%Y %H:%M":#20/11/2017 23:00
-            return datetime.strptime( s, format )
-        if format=="%d %m %H:%M %Y":#27 1 16:54 2017. 1 es el mes convertido con month2int
-            return datetime.strptime( s, format)
-        if format=="%Y-%m-%d %H:%M:%S.":#2017-11-20 23:00:00.000000  ==>  microsecond. Notice the point in format
-            arrPunto=s.split(".")
-            s=arrPunto[0]
-            micro=int(arrPunto[1]) if len(arrPunto)==2 else 0
-            dt=datetime.strptime( s, "%Y-%m-%d %H:%M:%S" )
-            dt=dt+timedelta(microseconds=micro)
-            return dt
-        if format=="%H:%M:%S": 
-            tod=date.today()
-            a=s.split(":")
-            return datetime(tod.year, tod.month, tod.day, int(a[0]), int(a[1]), int(a[2]))
-        if format=='%b %d %H:%M:%S': #Apr 26 07:50:44. Year is missing so I set to current
-            s=f"{date.today().year} {s}"
-            return datetime.strptime(s, '%Y %b %d %H:%M:%S')
-    else:
-        raise (_("I can't convert this format '{}'. I only support this {}").format(format, allowed))
 
+def list2string(lista):
+        """Covierte lista a string"""
+        if  len(lista)==0:
+            return ""
+        if str(lista[0].__class__) in ["<class 'int'>", "<class 'float'>"]:
+            resultado=""
+            for l in lista:
+                resultado=resultado+ str(l) + ", "
+            return resultado[:-2]
+        elif str(lista[0].__class__) in ["<class 'str'>",]:
+            resultado=""
+            for l in lista:
+                resultado=resultado+ "'" + str(l) + "', "
+            return resultado[:-2]
 
 class ConfigParserRB:
     def __init__(self, filename):
@@ -123,7 +83,7 @@ class ConfigParserRB:
     def getBoolean(self, section,option, default=None):
         try:
             value=self.get(section, option, default)
-            return str2bool(value)
+            return casts.str2bool(value)
         except:
             debug("I couldn't convert to boolean {} ({})".format(value, value.__class__))
 
@@ -131,18 +91,18 @@ class ConfigParserRB:
     def getDatetimeNaive(self, section, option, default=None, format="%Y%m%d%H%M"):
         try:
             value=self.get(section, option, default)
-            return string2dtnaive(value, format)
+            return casts.str2dtnaive(value, format)
         except:
             debug("I couldn't convert to datetime naive {} ({})".format(value, value.__class__))
 
-    def getList(self, section, option, default):
+    def getList(self, section, option, default=[]):
         try:
             value=self.get(section, option, default)
             return string2list_of_strings(value)
         except:
             debug("I couldn't convert to list of strings {} ({})".format(value, value.__class__))
 
-    def getListOfIntegers(self, section, option, default):
+    def getListOfIntegers(self, section, option, default=[]):
         try:
             value=self.get(section, option, default)
             return string2list_of_integers(value)
