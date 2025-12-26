@@ -1,15 +1,11 @@
-import base64
+from base64 import b64encode, b64decode
 
-def string_to_rotated_base64(texto):
+
+def string_to_rotatedbase64(texto):
     if not texto:
         return ""
-    
-    # Convertir string a bytes (latin-1 es eficiente y mapea 1:1 los primeros 256 caracteres)
-    # Esto reemplaza la lógica de ord(c) y format(..., '08b')
-    try:
-        b_data = texto.encode('latin-1')
-    except UnicodeEncodeError:
-        raise ValueError("El texto debe contener solo caracteres en el rango 0-255")
+       
+    b_data = texto.encode('utf8')
 
     num_bits = len(b_data) * 8
     val = int.from_bytes(b_data, 'big')
@@ -20,14 +16,14 @@ def string_to_rotated_base64(texto):
     rotated_val = ((val << 1) & mask) | (val >> (num_bits - 1))
     
     rotated_bytes = rotated_val.to_bytes(len(b_data), 'big')
-    return base64.b64encode(rotated_bytes).decode('utf-8')
+    return b64encode(rotated_bytes).decode('utf-8')
 
-def rotated_base64_to_string(b64_texto):
+def rotatedbase64_to_string(b64_texto):
     if not b64_texto:
         return ""
     
     try:
-        rotated_bytes = base64.b64decode(b64_texto)
+        rotated_bytes = b64decode(b64_texto)
     except Exception:
         return ""
 
@@ -41,4 +37,4 @@ def rotated_base64_to_string(b64_texto):
     original_val = (val >> 1) | ((val & 1) << (num_bits - 1))
     
     original_bytes = original_val.to_bytes(len(rotated_bytes), 'big')
-    return original_bytes.decode('latin-1')
+    return original_bytes.decode('utf8')

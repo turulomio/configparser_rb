@@ -1,18 +1,12 @@
-## THIS IS FILE IS FROM https://github.com/turulomio/reusingcode/python/myconfigparser.py
-## IF YOU NEED TO UPDATE IT PLEASE MAKE A PULL REQUEST IN THAT PROJECT AND DOWNLOAD FROM IT
-## DO NOT UPDATE IT IN YOUR CODE
-# Crypto belongs to pycryptodome
-
-from Crypto import Random
-from Crypto.Cipher import AES
-from Crypto.Hash import SHA256
-
 from base64 import b64encode, b64decode
 from configparser import ConfigParser
 from datetime import date, datetime, timedelta
 from decimal import Decimal
 from logging import debug
 from os import path, makedirs
+from configparser_rb import _
+from configparser_rb.rotatedbase64 import string_to_rotatedbase64, rotatedbase64_to_string
+
 
 ## BEGIN OF COPIES
 ## To make independient modules I copy this from reusing/casts
@@ -80,35 +74,8 @@ def string2dtnaive(s, format):
             s=f"{date.today().year} {s}"
             return datetime.strptime(s, '%Y %b %d %H:%M:%S')
     else:
-        error("I can't convert this format '{}'. I only support this {}".format(format, allowed))
+        raise (_("I can't convert this format '{}'. I only support this {}").format(format, allowed))
 
-## END OF COPIES
-
-
-
-
-
-BS = 16
-pad = lambda s: s + (BS - len(s) % BS) * bytes(chr(BS - len(s) % BS).encode("utf8") )
-unpad = lambda s : s[:-ord(s[len(s)-1:])]
-
-class AESCipher:
-       def __init__( self, key ):
-           self.key = key
-
-       ## @param raw bytes
-       def encrypt( self, raw ):
-           raw = pad(raw)
-           iv = Random.new().read( AES.block_size )
-           cipher = AES.new( self.key, AES.MODE_CBC, iv )
-           return b64encode( iv + cipher.encrypt( raw ) ) 
-
-       ## @param enc bytes
-       def decrypt( self, enc ):
-           enc = b64decode(enc)
-           iv = enc[:16]
-           cipher = AES.new(self.key, AES.MODE_CBC, iv )
-           return unpad(cipher.decrypt( enc[16:] ))
 
 class MyConfigParser:
     def __init__(self, filename):
@@ -118,19 +85,12 @@ class MyConfigParser:
             self.config.read(self.filename)
         else:
             print("Creating a new configuration file: {}".format(self.filename))
-        self.__generate_id()
-        self.id=self.get("MyConfigParser","id")[:16]
 
     def cset(self, section, option, value):
-        a=AESCipher(self.id.encode("utf8"));
-        ci=a.encrypt(value.encode("utf8"))
-        self.set(section,option,ci.decode("utf8"))
+        self.set(section,option, string_to_rotatedbase64(value))
 
     def cget(self, section, option, default=None):
-        a=AESCipher(self.id.encode("utf8"));
-        value=self.get(section,option,default).encode("utf8")
-        deci=a.decrypt(value)
-        return deci.decode("utf8")
+        return rotatedbase64_to_string(self.get(section,option,default))
 
     def get(self, section, option, default=None):
         if self.config.has_option(section, option)==True:
@@ -204,14 +164,9 @@ class MyConfigParser:
         with open(self.filename, 'w') as f:
             self.config.write(f)
 
-    ## Generate a [MyConfigParser] -> id if it's not created yet
-    def __generate_id(self):
-        if self.config.has_option("MyConfigParser","id") is False:
-            h = SHA256.new()
-            h.update(str(datetime.now()).encode("utf8"))
-            self.set("MyConfigParser","id", h.hexdigest())
 
-if __name__ == '__main__':
+
+def set():
     from argparse import ArgumentParser
 
     parser=ArgumentParser()
@@ -230,3 +185,19 @@ if __name__ == '__main__':
         config.set(args.section, args.key, args.value)
     config.save()
 
+def get():
+    from argparse import ArgumentParser
+
+    parser=ArgumentParser()
+    parser.description="Configura las keys en ficheros de MyConfigParser"
+    parser.add_argument("--file", required=True)
+    parser.add_argument("--section", required=True)
+    parser.add_argument("--key", required=True)
+    parser.add_argument("--secure", help="Encode setting", action="store_true", default=False)
+    args=parser.parse_args()
+
+    config=MyConfigParser(args.file)
+    if args.secure:
+        config.cget(args.section, args.key)
+    else:
+        config.get(args.section, args.key)
