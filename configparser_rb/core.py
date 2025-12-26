@@ -1,6 +1,5 @@
 from configparser import ConfigParser
 from decimal import Decimal
-from logging import debug
 from os import path, makedirs
 from configparser_rb import _
 from configparser_rb.rotatedbase64 import string_to_rotatedbase64, rotatedbase64_to_string
@@ -64,28 +63,28 @@ class ConfigParserRB:
             value=self.get(section, option, default)
             return Decimal(value)
         except:
-            debug("I couldn't convert to Decimal {} ({})".format(value, value.__class__))
+            print("I couldn't convert to Decimal {} ({})".format(value, value.__class__))
 
     def getFloat(self, section,option, default=None):
         try:
             value=self.get(section, option, default)
             return float(value)
         except:
-            debug("I couldn't convert to float {} ({})".format(value, value.__class__))
+            print("I couldn't convert to float {} ({})".format(value, value.__class__))
 
     def getInteger(self, section,option, default=None):
         try:
             value=self.get(section, option, default)
             return int(value)
         except:
-            debug("I couldn't convert to int {} ({})".format(value, value.__class__))
+            print("I couldn't convert to int {} ({})".format(value, value.__class__))
 
     def getBoolean(self, section,option, default=None):
         try:
             value=self.get(section, option, default)
             return casts.str2bool(value)
         except:
-            debug("I couldn't convert to boolean {} ({})".format(value, value.__class__))
+            print("I couldn't convert to boolean {} ({})".format(value, value.__class__))
 
     ## Example: self.value_datetime_naive("Version", "197001010000", "%Y%m%d%H%M")
     def getDatetimeNaive(self, section, option, default=None, format="%Y%m%d%H%M"):
@@ -93,21 +92,21 @@ class ConfigParserRB:
             value=self.get(section, option, default)
             return casts.str2dtnaive(value, format)
         except:
-            debug("I couldn't convert to datetime naive {} ({})".format(value, value.__class__))
+            print("I couldn't convert to datetime naive {} ({})".format(value, value.__class__))
 
     def getList(self, section, option, default=[]):
         try:
             value=self.get(section, option, default)
             return string2list_of_strings(value)
         except:
-            debug("I couldn't convert to list of strings {} ({})".format(value, value.__class__))
+            print("I couldn't convert to list of strings {} ({})".format(value, value.__class__))
 
     def getListOfIntegers(self, section, option, default=[]):
         try:
             value=self.get(section, option, default)
             return string2list_of_integers(value)
         except:
-            debug("I couldn't convert to list of integers {} ({})".format(value, value.__class__))
+            print("I couldn't convert to list of integers {} ({})".format(value, value.__class__))
 
     def set(self, section, option, value):
         if isinstance(value, list):
@@ -158,6 +157,6 @@ def get():
 
     config=ConfigParserRB(args.file)
     if args.secure:
-        config.cget(args.section, args.key)
+        print(config.cget(args.section, args.key))
     else:
-        config.get(args.section, args.key)
+        print(config.get(args.section, args.key))
