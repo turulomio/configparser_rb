@@ -1,6 +1,6 @@
 [project]
 name = "configparser_rb"
-version = "0.1.0"
+version = "1.0.0"
 description = "Config parser with the ability to obfuscate keys with rotated bits in base64"
 authors = [{name = "turulomio", email = "turulomio@yahoo.es"}]
 license = "GPL-3.0"
