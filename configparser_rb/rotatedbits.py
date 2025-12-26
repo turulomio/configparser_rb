@@ -1,31 +1,44 @@
-def string_to_rotatedbits(texto):
-    # 1. Convertir cada carácter a su representación binaria de 8 bits
-    # 'join' los une todos en una sola cadena de ceros y unos
-    bits = ''.join(format(ord(c), '08b') for c in texto)
-    
-    if not bits:
-        return ""
+import base64
 
-    # 2. El bit 0 (el primero) pasa a ser el último
-    # Tomamos desde el índice 1 hasta el final + el primer bit
-    bits_rotados = bits[1:] + bits[0]
-    
-    return bits_rotados
-
-def rotatedbits_to_string(bits_rotados):
-    if not bits_rotados:
+def string_to_rotated_base64(texto):
+    if not texto:
         return ""
     
-    # 1. Invertir la rotación: el último bit vuelve a ser el primero
-    # Tomamos el último bit + desde el inicio hasta el penúltimo
-    bits = bits_rotados[-1] + bits_rotados[:-1]
-    
-    # 2. Separar la cadena de bits en bloques de 8
-    caracteres = []
-    for i in range(0, len(bits), 8):
-        byte = bits[i:i+8]
-        # Convertir de binario (base 2) a entero y luego a carácter
-        caracteres.append(chr(int(byte, 2)))
-        
-    return ''.join(caracteres)
+    # Convertir string a bytes (latin-1 es eficiente y mapea 1:1 los primeros 256 caracteres)
+    # Esto reemplaza la lógica de ord(c) y format(..., '08b')
+    try:
+        b_data = texto.encode('latin-1')
+    except UnicodeEncodeError:
+        raise ValueError("El texto debe contener solo caracteres en el rango 0-255")
 
+    num_bits = len(b_data) * 8
+    val = int.from_bytes(b_data, 'big')
+    
+    # Rotar bits a la izquierda 1 posición usando operaciones bitwise
+    # ((val << 1) | (val >> (num_bits - 1))) & mask
+    mask = (1 << num_bits) - 1
+    rotated_val = ((val << 1) & mask) | (val >> (num_bits - 1))
+    
+    rotated_bytes = rotated_val.to_bytes(len(b_data), 'big')
+    return base64.b64encode(rotated_bytes).decode('utf-8')
+
+def rotated_base64_to_string(b64_texto):
+    if not b64_texto:
+        return ""
+    
+    try:
+        rotated_bytes = base64.b64decode(b64_texto)
+    except Exception:
+        return ""
+
+    if not rotated_bytes:
+        return ""
+
+    num_bits = len(rotated_bytes) * 8
+    val = int.from_bytes(rotated_bytes, 'big')
+    
+    # Rotar bits a la derecha 1 posición (inverso de la rotación izquierda)
+    original_val = (val >> 1) | ((val & 1) << (num_bits - 1))
+    
+    original_bytes = original_val.to_bytes(len(rotated_bytes), 'big')
+    return original_bytes.decode('latin-1')
