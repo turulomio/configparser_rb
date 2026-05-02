@@ -1,14 +1,3 @@
-from datetime import datetime
-from importlib.resources import files
-from gettext import translation
-
-__version__="1.0.0"
-__versiondatetime__= datetime(2025, 12, 26, 20, 41)
-__versiondate__=__versiondatetime__.date()
-
-
-try:
-    t=translation('configparser_rb', files("configparser_rb") / 'locale')
-    _=t.gettext
-except:
-    _=str
+from configparser_rb.rotatedbase64 import string_to_rotatedbase64, rotatedbase64_to_string
+from configparser_rb.core import ConfigParserRB
+from configparser_rb.version import __version__, __versiondate__, __versiondatetime__

@@ -13,6 +13,7 @@ def test_ConfigParserRB():
         config.set("Features", "list of integers", [1, 2])
         config.set("Features", "decimal", "12.234")
         config.cset("Features", "cstring", "Hi")
+        config.cset("Features", "rare string", "áéíadskjflkjh sda asdkj fslksdajñ091283y23915 !$&&(//())==?=?==)/(/&&\\)")
         config.save()
 
         config=ConfigParserRB(f"{tempdir}/config.ini")
@@ -24,3 +25,4 @@ def test_ConfigParserRB():
         assert config.getListOfIntegers("Features", "list of integers") == [1, 2]
         assert config.getList("Features", "list of strings") == ["a", "b"]
         assert config.getDecimal("Features", "decimal") == Decimal("12.234")
+        assert config.cget("Features", "rare string") == "áéíadskjflkjh sda asdkj fslksdajñ091283y23915 !$&&(//())==?=?==)/(/&&\\)"

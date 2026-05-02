@@ -1,4 +1,4 @@
-from configparser_rb import __version__
+from configparser_rb.version import __version__
 from os import system
 
 def release():
@@ -10,8 +10,7 @@ def release():
   * poe translate
   * linguist
   * poe translate
-  * poe test
-  * poe jupyter
+  * poe coverage
   * git commit -a -m 'configparser_rb-{0}'
   * git push
   * Hacer un pull request con los cambios a main
@@ -22,7 +21,6 @@ def release():
   * poetry publish
   * Crea un nuevo ebuild de configparser_rb en Gentoo con la nueva versión
   * Subelo al repositorio myportage
-
 """.format(__version__))
     
 def coverage():
