@@ -1,20 +1,22 @@
 [project]
 name = "configparser_rb"
-version = "1.0.0"
+version = "1.1.0"
 description = "Config parser with the ability to obfuscate keys with rotated bits in base64"
 authors = [{name = "turulomio", email = "turulomio@yahoo.es"}]
 license = "GPL-3.0"
 readme = "README.md"
-requires-python = ">=3.9,<4"
-dependencies = ["pydicts (>=1.1.0,<2.0.0)"]
+requires-python = ">=3.10,<4"
+dependencies = [
+    "pydicts >=1.3.0"
+]
 
 [tool.poetry]
 packages = [{include = "configparser_rb"}]
 
 [tool.poetry.group.dev.dependencies]
-pytest = ">=8.3.3"
-poethepoet = ">=0.29.0.1"
-coverage = ">=7.6.4"
+pytest = ">=9.0.3"
+poethepoet = ">=0.45.0"
+coverage = ">=7.13.5"
 
 
 [tool.poetry.scripts]
