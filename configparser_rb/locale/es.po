@@ -1,7 +1,7 @@
-# Spanish translations for PACKAGE package
-# Traducciones al español para el paquete PACKAGE.
-# Copyright (C) 2015 THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
+# Spanish translations for configparser_rb package
+# Traducciones al español para el paquete configparser_rb.
+# Copyright (C) 2015 configparser_rb
+# This file is distributed under the same license as the configparser_rb package.
 # root <turulomio@yahoo.es>, 2015.
 #
 msgid ""
@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: configparser_rb\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-26 20:05+0100\n"
-"PO-Revision-Date: 2015-03-22 18:51+0100\n"
+"PO-Revision-Date: 2025-12-26 20:15+0100\n"
 "Last-Translator: root <turulomio@yahoo.es>\n"
 "Language-Team: Spanish\n"
 "Language: es\n"
@@ -19,5 +19,4 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "I can't convert this format '{}'. I only support this {}"
-msgstr ""
-
+msgstr "No puedo convertir este formato '{}'. Solo soporto {}"

@@ -1,7 +1,7 @@
 from configparser import ConfigParser
 from decimal import Decimal
 from os import path, makedirs
-from configparser_rb import _
+from configparser_rb.commons import _
 from configparser_rb.rotatedbase64 import string_to_rotatedbase64, rotatedbase64_to_string
 from pydicts import casts
 
